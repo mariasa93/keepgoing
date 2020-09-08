@@ -1,0 +1,62 @@
+#include <iostream>
+#include "Rand.h"
+#include "SparseMatrixTraits.h"
+#include <string>
+#include <cstdio>
+
+
+
+template <typename T>
+class Cell{
+
+public:
+    Cell(const Coordinates &coordinate) : cor(coordinate){}
+
+    Cell() {
+    }
+    Coordinates cor;
+    T data;
+};
+
+template <typename T>
+class SparseMatrix : public SparseMatrixTraits<T>{
+public:
+    Cell<T> * * memory;
+    inline static int itemsInTable = 0;
+
+    SparseMatrix(){
+        memory = new Cell<T>*[10000000];
+    }
+
+    const T &operator()(Coordinates pos) const override {
+        Cell<T> * b = new Cell<T>(pos);
+        memory[SparseMatrix::itemsInTable] = b;
+        SparseMatrix::itemsInTable++;
+        T * a = new T(1);
+        b->data = *a;
+        return *a;
+    }
+
+    T &operator()(Coordinates pos) override {
+        Cell<T> * b = new Cell<T>(pos);
+        for (int i = 0; i < SparseMatrix::itemsInTable; ++i) {
+            if(pos.col == memory[i]->cor.col && pos.row == memory[i]->cor.row){
+                return memory[i]->data;
+            }
+        }
+
+        *(memory + SparseMatrix::itemsInTable) = b;
+        SparseMatrix::itemsInTable = SparseMatrix::itemsInTable + 1;
+        T * a = new T(0);
+        b->data = *a;
+        return *a;
+    }
+
+    void clear() override {
+        delete[] memory;
+    }
+
+    void print() override {
+        std::cout << "This prints the elemets???";
+    }
+};
