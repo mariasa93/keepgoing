@@ -1,0 +1,6 @@
+Test 1: Simple sparse matrix test.
+Set up a 3X3 sparse matrix and query ALL of its elements.
+
+1 0 2 
+0 0 0 
+3 0 4
